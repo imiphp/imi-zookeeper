@@ -32,7 +32,7 @@ return [
         'mode'    => env('IMI_CONFIG_CENTER_MODE', \Imi\ConfigCenter\Enum\Mode::PROCESS),
         'configs' => [
             'zk' => [
-                'driver'  => \Imi\ZooKeeper\Config\SwooleZooKeeperConfigDriver::class,
+                'driver'  => Imi::checkAppType('swoole') ? \Imi\ZooKeeper\Config\SwooleZooKeeperConfigDriver::class : \Imi\ZooKeeper\Config\ZooKeeperConfigDriver::class,
                 // 客户端连接配置
                 'client'  => [
                     'host'    => env('IMI_ZOOKEEPER_HOST', '127.0.0.1:2181'),

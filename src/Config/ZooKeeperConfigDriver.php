@@ -7,13 +7,12 @@ namespace Imi\ZooKeeper\Config;
 use Imi\Event\Event;
 use Imi\ZooKeeper\Config\Contract\IZooKeeperConfigDriver;
 use Imi\ZooKeeper\Config\Event\Param\ZooKeeperConfigChangeEventParam;
+use Imi\ZooKeeper\Listener\ConfigListener;
 use Imi\ZooKeeper\Listener\IConfigListener;
 use Imi\ZooKeeper\Listener\ListenerConfig;
-use Imi\ZooKeeper\Listener\SwooleConfigListener;
-use Imi\ZooKeeper\Util\SwooleZookeeperUtil;
-use swoole\zookeeper;
+use Zookeeper;
 
-class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
+class ZooKeeperConfigDriver implements IZooKeeperConfigDriver
 {
     protected string $name = '';
 
@@ -27,7 +26,7 @@ class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
     {
         $this->name = $name;
         $this->config = $config;
-        $this->configListener = new SwooleConfigListener($this->getOriginClient(), new ListenerConfig($config['listener'] ?? []));
+        $this->configListener = new ConfigListener($this, new ListenerConfig($config['listener'] ?? []));
     }
 
     public function getName(): string
@@ -50,7 +49,6 @@ class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
                     return;
                 }
             }
-            SwooleZookeeperUtil::checkErrorCode($client->errCode);
         }
     }
 
@@ -74,11 +72,7 @@ class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
         else
         {
             $client = $this->getOriginClient();
-            $result = $client->get($key, $options['version'] ?? -1);
-            if (!$result)
-            {
-                SwooleZookeeperUtil::checkErrorCode($client->errCode);
-            }
+            $result = $client->get($key);
 
             return $result ?: '';
         }
@@ -114,10 +108,7 @@ class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
         $client = $this->getOriginClient();
         foreach ($keys as $path)
         {
-            if (!$client->delete($path, $options['version'] ?? -1))
-            {
-                SwooleZookeeperUtil::checkErrorCode($client->errCode);
-            }
+            $client->delete($path);
         }
     }
 
@@ -182,10 +173,10 @@ class SwooleZooKeeperConfigDriver implements IZooKeeperConfigDriver
     /**
      * {@inheritDoc}
      */
-    public function getOriginClient(): zookeeper
+    public function getOriginClient(): Zookeeper
     {
         $clientConfig = $this->config['client'] ?? [];
 
-        return new zookeeper($clientConfig['host'] ?? '127.0.0.1:2181', $clientConfig['timeout'] ?? 10);
+        return new Zookeeper($clientConfig['host'] ?? '127.0.0.1:2181', null, (int) (($clientConfig['timeout'] ?? 10) * 1000));
     }
 }

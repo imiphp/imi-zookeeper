@@ -12,11 +12,11 @@
             <file>tests/SwooleWorkerTest.php</file>
             <file>tests/SwooleProcessTest.php</file>
         </testsuite>
-        <!-- <testsuite name="workerman">
+        <testsuite name="workerman">
             <file>tests/WorkermanTest.php</file>
         </testsuite>
         <testsuite name="fpm">
             <file>tests/FpmTest.php</file>
-        </testsuite> -->
+        </testsuite>
     </testsuites>
 </phpunit>

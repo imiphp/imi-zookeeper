@@ -49,3 +49,12 @@ jobs:
           docker exec swoole composer update --no-interaction --prefer-dist --no-progress
       - name: Test
         run: docker exec swoole composer test
+      - name: Print logs
+        if: failure()
+        run: |
+          echo "[log]"
+          cat example/.runtime/logs/*.log
+          echo "[swoole]"
+          cat example/.runtime/swoole.log
+          echo "[workerman]"
+          sudo cat example/.runtime/workerman.log

@@ -21,3 +21,4 @@ parameters:
 
     ignoreErrors:
         - '#expects class-string<\S+>, string given#'
+        - '#Method Zookeeper::create\(\) invoked with 2 parameters, 3-4 required#'

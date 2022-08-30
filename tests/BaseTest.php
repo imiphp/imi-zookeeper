@@ -59,7 +59,7 @@ abstract class BaseTest extends TestCase
             'value' => json_encode($value),
         ]);
 
-        $cacheFileName = \dirname(__DIR__) . '/example/.runtime/config-cache/imi/imi-zooKeeper-key1';
+        $cacheFileName = \dirname(__DIR__) . '/example/.runtime/config-cache/zookeeper/imi-zooKeeper-key1';
         for ($i = 0; $i < 15; ++$i)
         {
             sleep(1);
