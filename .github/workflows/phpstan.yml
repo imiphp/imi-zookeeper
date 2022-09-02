@@ -1,0 +1,35 @@
+name: Static Code Analysis
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+      SWOOLE_VERSION: ${{ matrix.swoole }}
+      ZOOKEEPER_VERSION: ${{ matrix.zookeeper }}
+      PHPX_VERSION: "master"
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.1"]
+        swoole: ["5.0"]
+        zookeeper: ["3.8"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Start docker
+        run: ./.github/start-docker.sh
+      - name: Install phpx
+        run: docker exec swoole ./.github/install-phpx.sh
+      - name: Build ext-zookeeper
+        run: docker exec swoole ./.github/build-ext-zookeeper.sh
+      - name: Prepare
+        run: |
+          docker exec swoole php -v
+          docker exec swoole composer -V
+          docker exec swoole composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Analyse
+        run: docker exec swoole ./vendor/bin/phpstan analyse --memory-limit 1G

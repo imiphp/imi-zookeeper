@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd /tmp && \
-curl -L -o ext-zookeeper.tar.gz "https://github.com/Yurunsoft/ext-zookeeper/archive/20220728.tar.gz" && \
-tar zxvf ext-zookeeper.tar.gz -C ./ && cd ./ext-zookeeper-20220728 && \
+curl -L -o ext-zookeeper.tar.gz "https://github.com/swoole/ext-zookeeper/archive/master.tar.gz" && \
+tar zxvf ext-zookeeper.tar.gz -C ./ && cd ./ext-zookeeper-master && \
 phpx build -v && \
 phpx install && \
 docker-php-ext-enable swoole_zookeeper && \
