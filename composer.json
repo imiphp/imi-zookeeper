@@ -4,7 +4,7 @@
     "license": "MulanPSL-2.0",
     "description": "imi 框架 ZooKeeper 组件。imi ZooKeeper component.",
     "require": {
-        "imiphp/imi-config-center": "2.1.x-dev"
+        "imiphp/imi-config-center": "~2.1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~3.4.0",
@@ -32,12 +32,6 @@
         "psr-4": {
             "app\\": "example/",
             "Imi\\ZooKeeper\\Test\\": "tests/"
-        }
-    },
-    "repositories": {
-        "imi-config-center": {
-            "type": "vcs",
-            "url": "https://github.com/imiphp/imi-config-center"
         }
     },
     "scripts": {

@@ -15,7 +15,15 @@
 
 * [x] 配置中心
 
-## Composer
+## 安装
+
+### PHP 扩展
+
+* Swoole 用户请安装 [swoole-zookeeper](https://github.com/swoole/ext-zookeeper) 扩展。
+
+* 非 Swoole 用户请安装 [php-zookeeper](<https://github.com/php-zookeeper/php-zookeeper>) 扩展。
+
+### 本组件
 
 本项目可以使用composer安装，遵循psr-4自动加载规则，在你的 `composer.json` 中加入下面的内容:
 
@@ -42,7 +50,8 @@
         'mode'    => \Imi\ConfigCenter\Enum\Mode::PROCESS, // 进程模式
         'configs' => [
             'zookeeper' => [
-                'driver'  => \Imi\ZooKeeper\Config\ZooKeeperConfigDriver::class,
+                'driver'  => \Imi\ZooKeeper\Config\SwooleZooKeeperConfigDriver::class, // Swoole 驱动
+                // 'driver'  => \Imi\ZooKeeper\Config\ZooKeeperConfigDriver::class, // 非 Swoole 驱动
                 // 客户端连接配置
                 'client'  => [
                     'host'    => env('IMI_ZOOKEEPER_HOST', '127.0.0.1:2181'), // 主机名:端口
@@ -60,8 +69,7 @@
                 'configs' => [
                     'zookeeper' => [
                         'key'   => 'imi-zooKeeper-key1',
-                        'group' => 'imi',
-                        'type'  => 'json', // 配置内容类型，ZooKeeper >= 1.3 可以不配，由配置项类型智能指定
+                        'type'  => 'json', // 配置内容类型
                     ],
                 ],
             ],
@@ -82,18 +90,19 @@
 /** @var \Imi\ConfigCenter\ConfigCenter $configCenter */
 $configCenter = App::getBean('ConfigCenter');
 $name = 'imi-zooKeeper-key1';
-$group = 'imi';
-$type = 'json';
 $value = json_encode(['imi' => 'niubi']);
-$configCenter->getDriver('zookeeper')->push($name, $value, [
-    'group' => $group,
-    'type'  => $type,
-]);
+$configCenter->getDriver('zookeeper')->push($name, $value);
 ```
 
-## 免费技术支持
+## 社群
 
-QQ群：17916227 [![点击加群](https://pub.idqqimg.com/wpa/images/group.png "点击加群")](https://jq.qq.com/?_wv=1027&k=5wXf4Zq)，如有问题会有人解答和修复。
+**imi 框架交流群：** 17916227 [![点击加群](https://pub.idqqimg.com/wpa/images/group.png "点击加群")](https://jq.qq.com/?_wv=1027&k=5wXf4Zq)
+
+**微信群：**
+
+<img src="https://github.com/imiphp/imi/raw/2.1/res/wechat.png" alt="imi" width="256px" />
+
+**打赏赞助：** <https://www.imiphp.com/donate.html>
 
 ## 运行环境
 
@@ -105,9 +114,3 @@ QQ群：17916227 [![点击加群](https://pub.idqqimg.com/wpa/images/group.png "
 ## 版权信息
 
 `imi-zookeeper` 遵循 MIT 开源协议发布，并提供免费使用。
-
-## 捐赠
-
-<img src="https://cdn.jsdelivr.net/gh/imiphp/imi@2.1/res/pay.png"/>
-
-开源不求盈利，多少都是心意，生活不易，随缘随缘……
